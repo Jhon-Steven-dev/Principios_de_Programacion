@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Interactivo: Lógica de Programación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        :root {
+            --bg-paper: #f8fafc;
+            --accent-cobalt: #1e40af;
+            --text-slate: #334155;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-paper);
+            color: var(--text-slate);
+            scroll-behavior: smooth;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .glass-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-color: #cbd5e1;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: #64748b;
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: var(--accent-cobalt);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            height: 300px;
+            margin: auto;
+        }
+
+        .matrix-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 2px solid #f1f5f9;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .matrix-cell:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .matrix-cell.active-row { background: #fee2e2; border-color: #ef4444; }
+        .matrix-cell.active-col { background: #dcfce7; border-color: #22c55e; }
+        .matrix-cell.active-focus { background: #3b82f6; color: white; border-color: #1d4ed8; }
+
+        pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky top-6 z-50 px-6">
+        <div class="max-w-4xl mx-auto bg-slate-100/80 backdrop-blur-md p-2 rounded-2xl flex justify-between items-center shadow-sm">
+            <div class="flex gap-1 overflow-x-auto pb-1 md:pb-0">
+                <button onclick="showSection('intro')" id="btn-intro" class="nav-btn active whitespace-nowrap">Conceptos</button>
+                <button onclick="showSection('functions')" id="btn-functions" class="nav-btn whitespace-nowrap">Funciones</button>
+                <button onclick="showSection('matrices')" id="btn-matrices" class="nav-btn whitespace-nowrap">Matrices</button>
+                <button onclick="showSection('ejemplos')" id="btn-ejemplos" class="nav-btn whitespace-nowrap">Ejemplos</button>
+                <button onclick="showSection('taller')" id="btn-taller" class="nav-btn whitespace-nowrap">Taller</button>
+            </div>
+            <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest hidden md:block">Manual v1.0</div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 py-16">
+
+        <!-- INTRODUCCIÓN Y ANALOGÍAS -->
+        <section id="sec-intro" class="space-y-20">
+            <div class="text-center max-w-3xl mx-auto">
+                <h1 class="text-5xl font-bold text-slate-900 mb-6 tracking-tight">Aprende a pensar como <span class="text-blue-600">Ingeniero</span></h1>
+                <p class="text-xl text-slate-500 leading-relaxed">
+                    Programar no es memorizar códigos, es aprender a dividir problemas grandes en piezas pequeñas que encajen entre sí.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-card p-10 space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-xl">1</div>
+                        <h2 class="text-2xl font-bold">La Ley del Orden</h2>
+                    </div>
+                    
+                    <p class="text-slate-600 leading-relaxed">
+                        Imagínate organizar un festival de música. No puedes hacerlo solo. Necesitas un equipo: uno para el sonido, otro para las luces y otro para la comida. 
+                        <br><br>
+                        En software, esos "equipos" son las <strong>Funciones</strong>. Cada una hace una sola cosa, pero juntas crean el festival.
+                    </p>
+                    
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 mt-4">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Definición Técnica</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">
+                            Una <strong>función</strong> (o subprograma) es un bloque de código independiente y reutilizable, diseñado para realizar una tarea específica. Recibe datos de entrada (parámetros), ejecuta instrucciones (cuerpo) y opcionalmente retorna un resultado, favoreciendo la abstracción y la modularidad del código fuente.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-10 space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-xl">2</div>
+                        <h2 class="text-2xl font-bold">La Ley de la Información</h2>
+                    </div>
+                    
+                    <p class="text-slate-600 leading-relaxed">
+                        ¿Cómo guardarías las notas de 100 estudiantes en 5 materias diferentes? Si usas variables simples, necesitarías 500 nombres.
+                        <br><br>
+                        Las <strong>Matrices</strong> son como un estante organizado por pasillos (filas) y niveles (columnas). Un solo nombre guarda todo.
+                    </p>
+
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 mt-4">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Definición Técnica</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">
+                            Una <strong>matriz</strong> (o arreglo bidimensional) es una estructura de datos estática que almacena múltiples elementos del mismo tipo de dato bajo un identificador común. El acceso a cada elemento en la memoria se realiza mediante un sistema de indexación compuesto por dos coordenadas espaciales: el índice de fila y el índice de columna.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-10 rounded-[32px] border border-slate-100">
+                <h3 class="text-center font-bold text-slate-400 uppercase tracking-widest text-sm mb-8">Impacto de la Modularización</h3>
+                <div class="chart-container">
+                    <canvas id="impactChart"></canvas>
+                </div>
+                <p class="text-center text-sm text-slate-400 mt-6 italic">A medida que tu código crece, las funciones evitan que el esfuerzo se dispare exponencialmente.</p>
+            </div>
+        </section>
+
+        <!-- MÓDULO FUNCIONES -->
+        <section id="sec-functions" class="hidden space-y-16">
+            <div class="max-w-2xl">
+                <h2 class="text-4xl font-bold mb-4 text-slate-900">Módulo 1: Subprocesos</h2>
+                <p class="text-lg text-slate-500">
+                    Es una "caja negra" donde entra algo, ocurre una transformación y sale un resultado.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Visualización de Flujo -->
+                <div class="md:col-span-2 glass-card p-8">
+                    <h3 class="font-bold text-lg mb-6">Simulador: El Ciclo de una Función</h3>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 py-10">
+                        <div class="text-center space-y-2">
+                            <div class="w-24 h-24 rounded-2xl bg-amber-50 border-2 border-dashed border-amber-300 flex items-center justify-center text-amber-600 font-bold">DATOS</div>
+                            <span class="text-xs font-bold text-slate-400">Entrada (Parámetros)</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-slate-100 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -top-4">
+                                <span class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-full animate-pulse">PROCESANDO</span>
+                            </div>
+                        </div>
+                        <div class="text-center space-y-2">
+                            <div class="w-32 h-32 rounded-3xl bg-blue-600 shadow-xl flex items-center justify-center text-white font-bold text-center p-4">MI FUNCIÓN</div>
+                            <span class="text-xs font-bold text-slate-400">Transformación</span>
+                        </div>
+                        <div class="flex-1 h-1 bg-slate-100"></div>
+                        <div class="text-center space-y-2">
+                            <div class="w-24 h-24 rounded-full bg-emerald-500 shadow-lg flex items-center justify-center text-white font-bold">VALOR</div>
+                            <span class="text-xs font-bold text-slate-400">Salida (Retorno)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalle Técnico -->
+                <div class="glass-card p-8 bg-slate-50">
+                    <h4 class="font-bold mb-4 text-blue-900">Conceptos Clave</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li>
+                            <strong class="block">Ámbito Local:</strong>
+                            Lo que declaras dentro de una función no existe afuera. Es como la privacidad de tu habitación.
+                        </li>
+                        <li>
+                            <strong class="block">Parámetros:</strong>
+                            Son los nombres que la función usa para referirse a los datos que le envías desde afuera.
+                        </li>
+                        <li>
+                            <strong class="block">Variable de Retorno:</strong>
+                            Es el mensajero que lleva el resultado final de vuelta al programa principal.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <h4 class="font-bold mb-4 text-center">Así se ve en PSeInt</h4>
+                <pre class="mono">
+<span class="text-blue-400">Funcion</span> resultado <- CalcularDescuento(precio, tasa)
+    Definir resultado Como Real
+    resultado <- precio - (precio * tasa / 100)
+<span class="text-blue-400">FinFuncion</span>
+
+<span class="text-blue-400">Algoritmo</span> Principal
+    Escribir CalcularDescuento(1000, 15) <span class="text-slate-500">// Salida: 850</span>
+<span class="text-blue-400">FinAlgoritmo</span></pre>
+            </div>
+        </section>
+
+        <!-- MÓDULO MATRICES -->
+        <section id="sec-matrices" class="hidden space-y-16">
+            <div class="max-w-2xl">
+                <h2 class="text-4xl font-bold mb-4 text-slate-900">Módulo 2: Matrices</h2>
+                <p class="text-lg text-slate-500">
+                    Imagínate un edificio con varios pisos (filas) y en cada piso varias habitaciones (columnas).
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="glass-card p-10">
+                    <h3 class="font-bold mb-6 flex justify-between items-center">
+                        Simulador de Recorrido
+                        <span class="text-xs bg-blue-100 text-blue-600 px-3 py-1 rounded-full">Recorrido Anidado</span>
+                    </h3>
+                    
+                    <div id="matrix-display" class="grid grid-cols-4 gap-3 mb-8">
+                        <!-- Generado por JS -->
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <button onclick="startMatrixScan()" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition">Iniciar Escaneo</button>
+                            <span id="scan-status" class="text-xs font-mono text-slate-400">Esperando orden...</span>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-xl">
+                            <p id="code-viz" class="text-emerald-400 font-mono text-sm">Para i=1 Hasta 4 Hacer...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                        <h4 class="font-bold text-slate-900 mb-2">La Analogía del Reloj 🕰️</h4>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Para recorrer una matriz usamos dos bucles. 
+                            <br><br>
+                            El bucle de las **Filas** es como la aguja de las horas: se mueve lento.
+                            El bucle de las **Columnas** es como la aguja de los minutos: da una vuelta completa (todas las columnas) antes de que la fila avance un solo paso.
+                        </p>
+                    </div>
+
+                    <div class="p-6 bg-amber-50 border border-amber-100 rounded-2xl">
+                <h4 class="font-bold text-amber-900 mb-2">¡Ojo con esto!</h4>
+                <p class="text-amber-800 text-xs">
+                    En PSeInt, si vas a pasar una matriz a un subproceso para llenarla, DEBES usar <strong>Por Referencia</strong>. Si no lo haces, los datos que guardes se perderán al terminar la función.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECCIÓN EJEMPLOS PRÁCTICOS -->
+<section id="sec-ejemplos" class="hidden space-y-16">
+    <div class="max-w-3xl">
+        <h2 class="text-4xl font-bold mb-4 text-slate-900">Ejemplos Prácticos</h2>
+        <p class="text-lg text-slate-500">
+            Aprende viendo cómo se resuelven problemas reales. Desde conceptos básicos hasta estructuras complejas.
+        </p>
+    </div>
+
+    <!-- Ejemplo 1: Básico -->
+    <div class="glass-card p-10 space-y-8">
+        <div class="flex items-center gap-4 mb-2">
+            <span class="bg-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Nivel Básico</span>
+            <h3 class="text-2xl font-bold text-slate-800">1. Calculadora de Área (Funciones)</h3>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <h4 class="font-bold text-slate-900">El Problema</h4>
+                <p class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    Necesitamos un programa que calcule el área de un círculo repetidas veces sin tener que escribir la fórmula matemática cada vez.
+                </p>
+                <h4 class="font-bold text-slate-900 pt-4">Explicación Paso a Paso</h4>
+                <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
+                    <li><strong>Definición:</strong> Creamos la función <code>CalcularArea</code> que recibe la variable <code>radio</code>.</li>
+                    <li><strong>Proceso Interno:</strong> Declaramos <code>area_calc</code>. Multiplicamos PI (3.14159) por el radio al cuadrado.</li>
+                    <li><strong>Retorno:</strong> La función devuelve el valor almacenado en <code>area_calc</code>.</li>
+                    <li><strong>Programa Principal:</strong> Pedimos el radio y llamamos a nuestra función.</li>
+                </ul>
+            </div>
+            
+            <div class="space-y-4 flex flex-col h-full">
+                <h4 class="font-bold text-slate-900">Código PSeInt</h4>
+                <div class="flex-grow">
+                    <pre class="mono h-full"><span class="text-blue-400">Funcion</span> area_calc <- CalcularArea(radio)
+    Definir area_calc Como Real
+    area_calc <- 3.14159 * (radio * radio)
+<span class="text-blue-400">FinFuncion</span>
+
+<span class="text-blue-400">Algoritmo</span> Principal
+    Definir r, resultado Como Real
+    Escribir "Ingrese el radio:"
+    Leer r
+    resultado <- CalcularArea(r)
+    Escribir "El área es: ", resultado
+<span class="text-blue-400">FinAlgoritmo</span></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8 border-t border-slate-100 pt-6">
+            <h4 class="font-bold text-slate-900 mb-4 text-center">Diagrama de Flujo</h4>
+            <div class="flex justify-center bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <!-- Se utiliza una imagen genérica representativa de un diagrama de flujo simple -->
+                <img src="https://www.visual-paradigm.com/servlet/editor-content/tutorials/flowchart-tutorial/sites/7/2018/09/flowchart-example-simple-algorithms.png" alt="Diagrama de flujo simple" class="max-h-64 rounded-lg object-contain mix-blend-multiply opacity-80 hover:opacity-100 transition-opacity">
+            </div>
+        </div>
+    </div>
+
+    <!-- Ejemplo 2: Intermedio -->
+    <div class="glass-card p-10 space-y-8">
+        <div class="flex items-center gap-4 mb-2">
+            <span class="bg-amber-100 text-amber-700 font-bold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Nivel Intermedio</span>
+            <h3 class="text-2xl font-bold text-slate-800">2. Suma Diagonal (Matrices)</h3>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="space-y-4 flex flex-col h-full">
+                <h4 class="font-bold text-slate-900">El Problema</h4>
+                <p class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    Tenemos una matriz 3x3 y necesitamos sumar únicamente los números de su diagonal principal (donde fila == columna).
+                </p>
+                <h4 class="font-bold text-slate-900 pt-4">Explicación Paso a Paso</h4>
+                <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5 flex-grow">
+                    <li><strong>Dimensionar:</strong> <code>Matriz[3,3]</code>.</li>
+                    <li><strong>Doble Bucle:</strong> Llenamos la matriz con números usando bucles anidados.</li>
+                    <li><strong>La Lógica:</strong> Un solo bucle <code>Para i <- 1 Hasta 3</code> es suficiente para la diagonal principal, ya que accedemos a <code>M[i,i]</code>.</li>
+                </ul>
+            </div>
+            
+            <div class="space-y-4">
+                <h4 class="font-bold text-slate-900">Código PSeInt</h4>
+                <pre class="mono"><span class="text-blue-400">Algoritmo</span> SumaDiagonal
+    Definir M, i, j, suma, cont Como Entero
+    Dimension M[3,3]
+    cont <- 1; suma <- 0
+    
+    <span class="text-slate-500">// Llenado (simplificado)</span>
+    Para i<-1 Hasta 3 Hacer
+        Para j<-1 Hasta 3 Hacer
+            M[i,j] <- cont; cont <- cont+1
+        FinPara
+    FinPara
+    
+    <span class="text-slate-500">// Suma Diagonal</span>
+    Para i<-1 Hasta 3 Hacer
+        suma <- suma + M[i,i]
+    FinPara
+    Escribir "Suma: ", suma
+<span class="text-blue-400">FinAlgoritmo</span></pre>
+            </div>
+        </div>
+        <div class="mt-8 border-t border-slate-100 pt-6">
+            <h4 class="font-bold text-slate-900 mb-4 text-center">Lógica de Bucles Anidados</h4>
+            <div class="flex justify-center bg-slate-50 rounded-xl p-4 border border-slate-200">
+                 <!-- Se utiliza una imagen genérica representativa de bucles anidados -->
+                <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6661c707655b3_nested_loop_in_c_01.jpg?d=2000x2000" alt="Diagrama bucles anidados" class="max-h-64 rounded-lg object-contain mix-blend-multiply opacity-80 hover:opacity-100 transition-opacity">
+            </div>
+        </div>
+    </div>
+
+    <!-- Ejemplo 3: Avanzado -->
+    <div class="glass-card p-10 space-y-8">
+        <div class="flex items-center gap-4 mb-2">
+            <span class="bg-red-100 text-red-700 font-bold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Nivel Avanzado</span>
+            <h3 class="text-2xl font-bold text-slate-800">3. Búsqueda Modular (Matrices + Funciones)</h3>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <h4 class="font-bold text-slate-900">El Problema</h4>
+                <p class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    Saber si un valor existe dentro de una matriz 4x4, delegando la tarea de búsqueda a una función independiente.
+                </p>
+                <h4 class="font-bold text-slate-900 pt-4">Explicación Paso a Paso</h4>
+                <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
+                    <li><strong>Por Referencia:</strong> Pasamos la matriz a la función por referencia para ahorrar memoria.</li>
+                    <li><strong>Bandera:</strong> Usamos <code>retorno <- Falso</code>. Si en el doble bucle <code>M[f,c] == num</code>, cambiamos a <code>Verdadero</code>.</li>
+                    <li><strong>Algoritmo Limpio:</strong> El código principal solo llama a la función y decide qué mensaje mostrar según el resultado Lógico.</li>
+                </ul>
+            </div>
+            
+            <div class="space-y-4">
+                <h4 class="font-bold text-slate-900">Código PSeInt</h4>
+                <pre class="mono text-[11px]"><span class="text-blue-400">Funcion</span> retorno <- ExisteValor(M <span class="text-purple-400">Por Referencia</span>, num)
+    Definir f, c Como Entero
+    Definir retorno Como Logico
+    retorno <- Falso
+    
+    Para f<-1 Hasta 4 Hacer
+        Para c<-1 Hasta 4 Hacer
+            Si M[f,c] = num Entonces
+                retorno <- Verdadero
+            FinSi
+        FinPara
+    FinPara
+<span class="text-blue-400">FinFuncion</span>
+
+<span class="text-blue-400">Algoritmo</span> Principal
+    <span class="text-slate-500">// ... (Asumimos Matriz 'Datos' ya llena) ...</span>
+    Si ExisteValor(Datos, 7) Entonces
+        Escribir "Encontrado!"
+    Sino
+        Escribir "No existe."
+    FinSi
+<span class="text-blue-400">FinAlgoritmo</span></pre>
+            </div>
+        </div>
+        <div class="mt-8 border-t border-slate-100 pt-6">
+            <h4 class="font-bold text-slate-900 mb-4 text-center">Arquitectura Modular</h4>
+            <div class="flex justify-center bg-slate-50 rounded-xl p-4 border border-slate-200">
+                 <!-- Se utiliza una imagen genérica representativa de diagrama modular -->
+                <img src="https://images.wondershare.com/edrawmax/article2023/complex-flowchart-examples/complex-flowchart-example.jpg" alt="Diagrama arquitectura modular" class="max-h-64 rounded-lg object-contain mix-blend-multiply opacity-80 hover:opacity-100 transition-opacity">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TALLER PRÁCTICO -->
+<section id="sec-taller" class="hidden space-y-12">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-4xl font-bold text-slate-900 mb-4">Gimnasio de Lógica</h2>
+                <p class="text-slate-500">Resuelve estos retos en tu PSeInt. Están diseñados para que aprendas a conectar los cables de tu cerebro programador.</p>
+            </div>
+
+            <div id="exercises-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Generado por JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal para las Pistas -->
+    <div id="hint-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/20 backdrop-blur-sm" onclick="closeHint()"></div>
+        <div class="relative bg-white border border-slate-100 rounded-3xl shadow-2xl p-8 max-w-md w-full transform transition-all">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <span class="text-amber-500">💡</span> Pista del Reto
+                </h3>
+                <button onclick="closeHint()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="bg-slate-50 p-4 rounded-2xl mb-6 border border-slate-100">
+                <p id="hint-text" class="text-slate-600 text-sm leading-relaxed"></p>
+            </div>
+            <div class="flex justify-end">
+                <button onclick="closeHint()" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-800 transition shadow-lg shadow-slate-900/20 text-sm">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-slate-100 py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12">
+            <div>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl"></div>
+                    <span class="font-bold text-xl">Lógica de Software I</span>
+                </div>
+                <p class="text-slate-400 text-sm">
+                    Esta herramienta ha sido diseñada para estudiantes de primer semestre como apoyo didáctico interactivo. La programación es un arte que se domina con paciencia.
+                </p>
+            </div>
+            <div class="text-right">
+                <span class="text-xs font-bold text-slate-300 uppercase tracking-widest block mb-4">Recursos adicionales</span>
+                <nav class="flex flex-col gap-2 text-sm text-blue-600 font-semibold">
+                    <a href="http://pseint.sourceforge.net/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-800 transition-colors">Descargar PSeInt Oficial</a>
+                    <a href="http://pseint.sourceforge.net/index.php?page=pseudocodigo.php" target="_blank" rel="noopener noreferrer" class="hover:text-blue-800 transition-colors">Documentación de Pseudocódigo</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const exercises = [
+            { id: 1, tag: "Funciones", title: "El Conversor", level: "Iniciación", desc: "Crea una función que reciba una temperatura en Celsius y la devuelva en Fahrenheit.", pista: "Fórmula: Fahrenheit = (Celsius * 9/5) + 32. Recuerda usar 'Definir ... Como Real' tanto para la entrada como para el retorno." },
+            { id: 2, tag: "Matrices", title: "El Mapa Escolar", level: "Medio", desc: "Crea una matriz 3x3 donde guardes nombres de alumnos. Haz que el programa pida una fila y columna y diga quién vive allí.", pista: "Usa 'Dimension Mapa[3,3]'. Llena la matriz con bucles anidados 'Para', y luego pide al usuario fila 'f' y columna 'c' para imprimir Mapa[f,c]." },
+            { id: 3, tag: "Mixto", title: "Cajero Automático", level: "Avanzado", desc: "Crea una función que reciba un monto y valide si es múltiplo de 10.000 para poder retirarlo.", pista: "Usa el operador 'MOD' (módulo). Si la operación (monto MOD 10000) es igual a 0, entonces es múltiplo. Devuelve un valor Lógico." },
+            { id: 4, tag: "Matrices", title: "Contador de Ceros", level: "Iniciación", desc: "Llena una matriz 4x4 con números aleatorios y cuenta cuántas veces aparece el número 0.", pista: "Usa la función 'Aleatorio(min, max)' de PSeInt. Declara una variable 'contador' antes del bucle que inicie en 0 y sume 1 si encuentras un cero." },
+            { id: 5, tag: "Funciones", title: "Validador de Claves", level: "Medio", desc: "Función que reciba un texto y devuelva 'Verdadero' si tiene más de 8 caracteres.", pista: "PSeInt tiene una función integrada llamada 'Longitud(texto)' que cuenta las letras. Úsala dentro de tu estructura 'Si-Entonces'." },
+            { id: 6, tag: "Matrices", title: "Suma de Filas", level: "Avanzado", desc: "Dada una matriz 3x3, calcula la suma de cada fila y muéstralo de forma organizada.", pista: "La clave está en reiniciar tu variable 'suma_actual' a 0 justo ANTES de empezar el bucle interno de las columnas, pero DENTRO del bucle de las filas." },
+            { id: 7, tag: "Funciones", title: "Calculadora de IVA", level: "Iniciación", desc: "Función que reciba un precio y le sume el 19% de impuestos automáticamente.", pista: "Puedes calcular (precio * 0.19) y sumárselo al original, o simplemente multiplicar directo: (precio * 1.19)." },
+            { id: 8, tag: "Matrices", title: "La Diagonal", level: "Medio", desc: "Crea una matriz 5x5 y llena de 'X' solo la diagonal principal (donde fila es igual a columna).", pista: "¡Truco! No necesitas anidar bucles. Solo usa un bucle 'Para i <- 1 Hasta 5 Hacer' y asigna Matriz[i, i] <- 'X'." },
+            { id: 9, tag: "Mixto", title: "Buscador Pro", level: "Avanzado", desc: "Función que busque un nombre en una matriz y devuelva 'Encontrado' o 'No existe'.", pista: "Recuerda pasar la matriz a la función. Usa una variable lógica 'encontrado' que inicie en Falso y cambie a Verdadero si el nombre coincide durante el recorrido." },
+            { id: 10, tag: "Funciones", title: "Es Primo?", level: "Medio", desc: "Función que reciba un número y determine si es primo devolviendo un valor lógico.", pista: "Un número es primo si solo es divisible por 1 y por sí mismo. Crea un bucle y cuenta cuántos divisores exactos tiene usando MOD." }
+        ];
+
+        function showSection(id) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`sec-${id}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${id}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function initExercises() {
+            const grid = document.getElementById('exercises-grid');
+            exercises.forEach(ex => {
+                const card = document.createElement('div');
+                card.className = 'glass-card p-6 flex flex-col justify-between';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded text-slate-500 uppercase">${ex.tag}</span>
+                            <span class="text-[10px] font-bold text-blue-600">${ex.level}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 mb-2">${ex.title}</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">${ex.desc}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-50 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-300 font-mono">ID: PS-0${ex.id}</span>
+                        <button onclick="showHint(${ex.id})" class="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline transition">Ver Pista</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showHint(id) {
+            const exercise = exercises.find(ex => ex.id === id);
+            if (exercise) {
+                document.getElementById('hint-text').innerText = exercise.pista;
+                const modal = document.getElementById('hint-modal');
+                modal.classList.remove('hidden');
+                // Pequeña animación de entrada
+                setTimeout(() => {
+                    modal.querySelector('.transform').classList.add('scale-100', 'opacity-100');
+                    modal.querySelector('.transform').classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+        }
+
+        function closeHint() {
+            const modal = document.getElementById('hint-modal');
+            modal.querySelector('.transform').classList.remove('scale-100', 'opacity-100');
+            modal.querySelector('.transform').classList.add('scale-95', 'opacity-0');
+            // Esperar a que termine la animación antes de ocultar
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        function initMatrix() {
+            const display = document.getElementById('matrix-display');
+            for(let i=1; i<=16; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'matrix-cell mono text-xs font-bold text-slate-400';
+                cell.id = `cell-${i}`;
+                cell.innerText = "0";
+                display.appendChild(cell);
+            }
+        }
+
+        async function startMatrixScan() {
+            const status = document.getElementById('scan-status');
+            const code = document.getElementById('code-viz');
+            const cells = document.querySelectorAll('.matrix-cell');
+            
+            status.innerText = "Iniciando bucle...";
+            
+            for(let f=0; f<4; f++) {
+                for(let c=0; c<4; c++) {
+                    const idx = f * 4 + c;
+                    cells.forEach(cell => cell.classList.remove('active-focus', 'active-row', 'active-col'));
+                    
+                    // Resaltar fila y columna
+                    for(let i=0; i<4; i++) {
+                        cells[f * 4 + i].classList.add('active-row');
+                        cells[i * 4 + c].classList.add('active-col');
+                    }
+                    
+                    cells[idx].classList.add('active-focus');
+                    cells[idx].innerText = "1";
+                    
+                    code.innerHTML = `M[<span class="text-red-400">${f+1}</span>, <span class="text-green-400">${c+1}</span>] <- 1`;
+                    status.innerText = `Fila: ${f+1} | Col: ${c+1}`;
+                    
+                    await new Promise(r => setTimeout(r, 400));
+                }
+            }
+            status.innerText = "Recorrido completado.";
+            code.innerText = "FinPara // Bucles terminados";
+        }
+
+        function initCharts() {
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Conceptos', 'Vectores', 'Funciones', 'Matrices', 'Proyecto Final'],
+                    datasets: [{
+                        label: 'Complejidad sin Funciones',
+                        data: [5, 20, 45, 80, 100],
+                        borderColor: '#cbd5e1',
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        pointRadius: 0
+                    }, {
+                        label: 'Complejidad Modularizada',
+                        data: [5, 15, 25, 35, 45],
+                        borderColor: '#1e40af',
+                        backgroundColor: 'rgba(30, 64, 175, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11, weight: '600' } } }
+                    },
+                    scales: {
+                        y: { display: false },
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        window.onload = () => {
+            initCharts();
+            initMatrix();
+            initExercises();
+        };
+    </script>
+</body>
+</html>
